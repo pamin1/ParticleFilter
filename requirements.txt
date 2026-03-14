@@ -1,0 +1,4 @@
+numpy
+tk
+opencv-python-headless
+matplotlib
