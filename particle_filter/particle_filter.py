@@ -48,7 +48,13 @@ def particle_likelihood(robot_lidar_array: list[float], particle_lidar_array: np
     max_range = 1.0
 
     ######### START STUDENT CODE #########
+    log_l = 0.0
+    for z_robot, z_particle in zip(robot_lidar_array, particle_lidar_array):
+        z_r = max_range if math.isinf(z_robot) else min(z_robot, max_range)
+        z_p = max_range if math.isinf(z_particle) else min(z_particle, max_range)
+        log_l += -0.5 * ((z_r - z_p) / LIDAR_RANGE_SIGMA) ** 2
 
+    l = math.exp(log_l / len(robot_lidar_array))
     ########## END STUDENT CODE ##########
     return l
 
@@ -66,7 +72,10 @@ def compute_particle_weights(particles:list[SE2], robot_lidar_measures:list[floa
     """
     particle_weights = []
     ######### START STUDENT CODE #########
-
+    for particle in particles:
+        particle_lidar_array = lidar_sim.read(particle)
+        weight = particle_likelihood(robot_lidar_measures, particle_lidar_array)
+        particle_weights.append(weight)
     ########## END STUDENT CODE ##########
     return particle_weights
 
