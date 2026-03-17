@@ -84,7 +84,8 @@ class Environment:
         omega = 0
 
         ######### START STUDENT CODE #########
-
+        v_x = (self.wheel_radius / 2) * (omega_r + omega_l)
+        omega = (self.wheel_radius / self.axle_length) * (omega_r - omega_l)
         ########## END STUDENT CODE ##########
 
         return v_x, omega

@@ -47,7 +47,9 @@ class SE2:
         ######### START STUDENT CODE #########
         # Compute the homogeneous transformation matrix in self.T if you choose to use the it.
         # You won't lose points for not computing or not using the transformation matrix self.T.
-
+        self.T = np.array([[self.c, -self.s, self.x],
+                          [self.s, self.c, self.y],
+                          [0, 0, 1]])
         ########## END STUDENT CODE ##########
 
     # Returns the translation component as a point.
@@ -70,10 +72,12 @@ class SE2:
         Return:
             *(Point): the point after the transformation.
         """
-        new_x = None
-        new_y = None
-        ######### START STUDENT CODE #########
 
+        ######### START STUDENT CODE #########
+        old_point = np.array([point.x, point.y, 1]).reshape(3, 1)
+        new_point = self.T @ old_point
+        new_x = new_point[0, 0]
+        new_y = new_point[1, 0]
         ########## END STUDENT CODE ##########
         return Point(new_x, new_y)
 
@@ -90,9 +94,13 @@ class SE2:
         Return:
             * (SE2): The resulting SE2 after composition.
         """
-        new_pose = None
-        ######### START STUDENT CODE #########
 
+        ######### START STUDENT CODE #########
+        composition = self.T @ other.T
+        new_x = composition[0, 2]
+        new_y = composition[1, 2]
+        new_h = math.atan2(composition[1, 0], composition[0, 0])
+        new_pose = SE2(new_x, new_y, new_h)
         ########## END STUDENT CODE ##########
         return new_pose
 
@@ -106,11 +114,11 @@ class SE2:
         Return:
             * (SE2): the inverse transformation.
         """
-        new_x = None
-        new_y = None
-        new_h = None
         ######### START STUDENT CODE #########
-
+        new_T = np.linalg.inv(self.T)
+        new_x = new_T[0,2]
+        new_y = new_T[1,2]
+        new_h = math.acos(new_T[0,0])
         ########## END STUDENT CODE ##########
         return SE2(new_x, new_y, new_h)
 
